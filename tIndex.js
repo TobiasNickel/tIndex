@@ -1,5 +1,12 @@
-tIndex = (function() {
+tIndex = (function(undefined) {
     var id = 1;
+	/**
+	 *@contructor
+	 *@param indexes {Array of Strings} 
+	 *			containing the names for the indexes that get created
+	 *@param tIdName {optional String} 
+	 *			property name that will be added to the object
+	 */
     function tIndex(indexes, tIdName) {
         this.tIdName = tIdName || '_tId'
         this._indexes = {};
@@ -9,14 +16,19 @@ tIndex = (function() {
         }
     }
     tIndex.prototype = { 
+		/**
+		 * finds objects, that belong to a given key in an index
+		 * @param index {string} the given intex
+		 * @param key   {string} the given key
+		 */
         get : function get(index, key) {
             if (this._indexes[index] && this._indexes[index][key])
-                this._indexes[index][key].slice();
+                return this._indexes[index][key].slice() || [];
         },
 		
 		/**
 		 *	removes the given object from the index
-		 *	@param object {object} the given object
+		 *	@param object {Object} the given object
 		 */
         remove : function remove(object) {
             if (object[this.tIdName] === undefined)
@@ -28,13 +40,13 @@ tIndex = (function() {
                 index[keys[name]] = [];
                 index[keys[name]].splice(index[keys[name]].indexOf(object), 1);
             }
-            delete this.keys[object[this.tIdName]];
-            delete object[this.tIdName];
+            this.keys[object[this.tIdName]] = undefined;
+            object[this.tIdName] = undefined;
         },
 		
 		/**
 		 *	used to insert a given object
-		 *	@param object {object} the given object
+		 *	@param object {Object} the given object
 		 */
         add : function add(object, pId) {
             if (object[this.tIdName] !== undefined)
@@ -53,7 +65,7 @@ tIndex = (function() {
 		
 		/**
 		 *	updates the index for the given objects, not the object
-		 *	@param object {object} the given object
+		 *	@param object {Object} the given object
 		 */
         update: function update(object) {
 			var id=object[this.tIdName];
